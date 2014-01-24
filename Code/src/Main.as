@@ -1,13 +1,12 @@
 package 
 {
-	import flash.display.Sprite;
-	import flash.events.Event;
+	import net.flashpunk.*;
 	
 	/**
 	 * ...
 	 * @author Zephyr Raine
 	 */
-	public class Main extends Sprite 
+	public class Main extends Game 
 	{
 		
 		public function Main():void 
