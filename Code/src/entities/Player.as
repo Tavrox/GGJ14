@@ -62,7 +62,7 @@ package entities
 			if (Input.check(Key.LEFT)) dx = -speed;
 			else if (Input.check(Key.RIGHT)) dx = speed;
 			
-			if (Input.check(Key.UP)) dy = -speed;
+			if (Input.pressed(Key.UP) && dy == 0) dy = -speed;
 			else if (Input.check(Key.DOWN)) dy = speed;
 	
 			dx *= frictx;
