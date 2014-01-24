@@ -16,20 +16,16 @@ package worlds
 		public function gameWorld() 
 		{
 			super();
+			
 			player = new Player();
 			add (player);
 			add (new Wall(100, 200, 25, 50)); 
-			
+			add(new Wall(0, 550, 10, 960));
 		}
 		
 		override public function update():void 
 		{
 		
-			if (Input.check(Key.LEFT)) player.x -= 10;
-			else if (Input.check(Key.RIGHT)) player.x += 10;
-			
-			if (Input.check(Key.UP)) player.y -= 10;
-			else if (Input.check(Key.DOWN)) player.y += 10;
 			
 			super.update();
 		}
