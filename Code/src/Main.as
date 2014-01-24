@@ -29,7 +29,6 @@ package
 		
 		override public function init():void
 		{
-			trace("ok baby");
 			super.init();
 		
 		}

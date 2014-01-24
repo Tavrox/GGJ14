@@ -5,6 +5,7 @@ package entities
 	import net.flashpunk.graphics.Image;
 	import net.flashpunk.Mask;
 	import net.flashpunk.utils.*;
+	import net.flashpunk.*;
 	
 	/**
 	 * ...
@@ -25,6 +26,11 @@ package entities
 		
 		public var fricty:Number;
 		public var frictx:Number;
+		
+		
+		public var lightOn:Boolean = true;
+		public var debug:Boolean = true;
+		
 		
 		public function Player() 
 		{
@@ -49,26 +55,40 @@ package entities
 		
 		override public function update():void
 		{
-			if (collide("wall", x, y))
+			if (collide("ennemy", x, y))
 			{
-				dy = 0;
+				FP.world.remove(this);
 			}
+			
+			if (debug)
+			{
+				if (Input.check(Key.LEFT)) dx = -speed;
+				else if (Input.check(Key.RIGHT)) dx = speed;
+				
+				if (Input.check(Key.UP)) dy = -speed;
+				else if (Input.check(Key.DOWN)) dy = speed;
+			}
+			
+			
 			else
 			{
-				dy += gravity;
-				dy *= fricty;
+				if (Input.check(Key.LEFT)) dx = -speed;
+				else if (Input.check(Key.RIGHT)) dx = speed;
+				
+				if (Input.pressed(Key.UP) && dy == 0) dy = -speed;
+			//else if (Input.check(Key.DOWN)) dy = speed;
 			}
 			
-			if (Input.check(Key.LEFT)) dx = -speed;
-			else if (Input.check(Key.RIGHT)) dx = speed;
 			
-			if (Input.pressed(Key.UP) && dy == 0) dy = -speed;
-			else if (Input.check(Key.DOWN)) dy = speed;
 	
+			//dy += gravity;
+			dy *= fricty;
+			
+			
 			dx *= frictx;
 			
-			y += dy;
-			x += dx;
+			y += dy.toFixed(2);
+			x += dx.toFixed(2);
 			
 			super.update();
 			
