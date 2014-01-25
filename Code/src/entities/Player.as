@@ -1,5 +1,6 @@
 package entities 
 {
+	import flash.media.Sound;
 	import net.flashpunk.Entity;
 	import net.flashpunk.Graphic;
 	import net.flashpunk.graphics.Image;
@@ -15,11 +16,12 @@ package entities
 	public class Player extends Entity 
 	{
 		// GRAPH //
-		[Embed(source = "../../assets/player.png")] private const GRAPHIC:Class;
+		[Embed(source = "../../assets/character.png")] private const GRAPHIC:Class;
 		[Embed(source = "../../assets/circle_gradient.png")] private const LIGHT:Class;
 		[Embed(source = "../../assets/lightPerso.png")] private const LIGHTPERSO:Class;
 		
 		// SOUNDS //
+		[Embed(source = "../../assets/sfx/baby_cry_1.mp3")] private const SOUND:Class;
 		
 		public var image:Image;
 		
@@ -33,11 +35,12 @@ package entities
 		public var fricty:Number;
 		public var frictx:Number;
 		
+		public var jump:Number;
+		
 		//public var ObjBravoure : Bravoure;
 		
 		public var lightOn:Boolean = true;
-		public var debug:Boolean = true;
-		
+		public var debug:Boolean = false; // DEBUG BDEGUERUGREUGERZ !!		
 		public var imageMouseLight:Image;
 		public var imagePersoLight:Image;
 		
@@ -46,6 +49,11 @@ package entities
 		
 		public var angle:Number;
 		
+		public var sound:Sfx;
+		public var baby:Sfx;
+		
+		public var played:Boolean;
+		
 		public function Player() 
 		{
 			x = 200;
@@ -53,13 +61,25 @@ package entities
 			image = new Image(GRAPHIC);
 			name = "player";
 			type = "player";
+			//SOUNDS
 			
+			baby = new Sfx(SOUND);
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//sound.play();
 			//ObjBravoure = new Bravoure();
 			
-			//width = image.width;
-			//height = image.height;
-			width = 32;
-			height = 32;
+			width = image.width;
+			height = image.height;
 			image.centerOO();
 			
 			centerOrigin();
@@ -69,21 +89,22 @@ package entities
 			dy = 0;
 			dx = 0;
 			
-			gravity = 0.4;
+			jump = 10;
+			gravity = 0.8;
 			fricty = 0.92;
 			frictx = 0.92;
 			
 			imageMouseLight = new Image(LIGHT);
-			imageMouseLight.originX = this.originX-8;
+			imageMouseLight.originX = this.originX;
 			imageMouseLight.originY = this.originY - 8;
 			
 			imagePersoLight = new Image(LIGHTPERSO);
-			imagePersoLight.originX = this.originX - 8;
+			imagePersoLight.originX = this.originX ;
 			imagePersoLight.originY = this.originY - 8;
 			
 			
-			mouseLight = new Light(this.x, this.y, imageMouseLight, 4, 1);
-			persoLight = new Light(this.x, this.y, imagePersoLight, 4, 1);
+			mouseLight = new Light(this.x, this.y, imageMouseLight, 3, 1);
+			persoLight = new Light(this.x, this.y, imagePersoLight, 3, 1);
 			
 			gameWorld.lighting.add(persoLight);
 			gameWorld.lighting.add(mouseLight);
@@ -96,10 +117,8 @@ package entities
 			{
 				FP.world.remove(this);
 			}
-			if (collide("wall",  x, y))
-			{
-				trace ("collision");
-			}
+			
+			checkSounds();
 			
 			if (debug)
 			{
@@ -111,24 +130,29 @@ package entities
 			}
 			
 			
+			
 			else
 			{
-				if (Input.check(Key.LEFT)) dx = -speed;
+				if (Input.check(Key.LEFT))	dx = -speed;
 				else if (Input.check(Key.RIGHT)) dx = speed;
 				
-				if (Input.pressed(Key.UP) && dy == 0) dy = -speed;
-			//else if (Input.check(Key.DOWN)) dy = speed;
-			}
 			
 			if (Input.mouseDown) lightOn = true;
 			else lightOn = false;
 	
-			//dy += gravity;
-			dy *= fricty;
+			if (!debug) dy += gravity;
 			
+			if (collide("wall",  x, y+1))
+			{
+				dy = 0;
+			}
+				if (Input.pressed(Key.UP) && dy == 0)	dy = -jump;
+			//else if (Input.check(Key.DOWN)) dy = speed;
+			}
 			
 			dx *= frictx;
 			
+			dy *= fricty;
 			y += dy;
 			x += dx;
 			mouseLight.x = this.x;
@@ -152,7 +176,29 @@ package entities
 			imageMouseLight.angle = angle;
 			
 			super.update();
-		}		
+		}
+		
+		public function checkSounds():void
+		{
+			if (!played)
+			{
+				if (collidePoint(x, y, 200, 100)) sound = baby;
+			//	else if (collidePoint(x, y, 250, 300)) sound = bouteille;
+				else sound = null;
+				
+				if (sound) 
+				{
+					played = true;
+					sound.play();
+				}
+				
+			}
+			else
+			{
+				played = false;
+			}
+			
+		}
 	}
 
 }
