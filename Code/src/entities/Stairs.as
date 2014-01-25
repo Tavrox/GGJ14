@@ -19,7 +19,7 @@ package entities
 			image = new Image(GRAPHIC);
 			super(120, 160, image);
 			setHitbox(image.width, image.height);
-			//type = "wall";
+			type = "stairs";
 		
 			
 		}

@@ -15,19 +15,30 @@ package worlds
 	{
 		//[Embed(source = "../../assets/bg.png")] private const BG:Class;
 		[Embed(source = "../../assets/mockup-bastien.jpg")] private const BG:Class;
+		[Embed(source = "../../assets/sfx/ambiance.mp3")] private const MUSIC:Class;
 		
 		public var background:Entity;
 		public var player:Player;
 		public var monster:Monster;
 		public var speed:Number = 10;
 		
+		public var ambiance:Sfx;
+		
 		public static var lighting:Lighting;
 		
 		public var angle:Number;
 		public var valeurY:Number;
+		
+		public var bravour:Number = 50;
+		public var second:Number = 0;
+		public var lightTimer:Number = 0;
+		
 		public function gameWorld() 
 		{
 			super();
+			
+			ambiance = new Sfx(MUSIC);
+			ambiance.loop();
 			
 			lighting = new Lighting(FP.width, FP.height, 0xFFFFFF, -1000);
 			background = new Entity(0, 0, new Image(BG));
@@ -36,6 +47,11 @@ package worlds
 			player = new Player();
 			monster = new Monster();
 			
+			add(new Wall(0, 150, 121, 11));
+			add(new Wall(224, 150, 736, 11));
+			add(new Wall(0, 260, 960, 11));
+			add(new Stairs());
+			//add(monster);
 			add(player);
 		}
 		
@@ -51,16 +67,29 @@ package worlds
 				monster.monsterLight.active = true;
 				monster.visible = true;
 				monster.moveTowards(player.x, player.y, 5);
-				player.speed = 2;
+				player.speed = 1;
+				lightTimer ++;
 			}
 			else
 			{
 				monster.monsterLight.active = false;
 				player.mouseLight.active = false;
 				monster.visible = false;
-				player.speed = 4;
+				player.speed = 2;
+				lightTimer --;
 			}
 			
+			if (lightTimer >= 180) lightTimer = 180;
+			if (lightTimer <= -180) lightTimer = -180;
+			
+			bravour -= 0.01*int(player.lightOn);
+			
+			if (bravour <= 0) bravour = 0;
+			if (bravour >= 100) bravour = 100;
+			
+			second = lightTimer / 60;
+			
+			FP.console.log("lightTimer : " + second.toFixed() + " bravour : " + bravour.toFixed() + " " + player.x.toFixed() + player.y.toFixed());
 			super.update();
 		}
 	}
