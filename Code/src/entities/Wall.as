@@ -13,7 +13,7 @@ package entities
 		//[Embed(source = "../../assets/walldebug.png")] private const GRAPHIC:Class;
 		public var image:Image;
 		
-		public function Wall(_x:int, _y:int, _height:int, _width:int) 
+		public function Wall(_x:int, _y:int, _width:int, _height:int) 
 		{
 			//image = new Image(GRAPHIC);
 			

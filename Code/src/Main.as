@@ -25,11 +25,12 @@ package
 		{
 			super(960, 600, 60, false);
 			FP.world = new gameWorld();
+			FP.console.debug = true;
+			FP.console.enable();
 		}
 		
 		override public function init():void
 		{
-			trace("ok baby");
 			super.init();
 		
 		}
