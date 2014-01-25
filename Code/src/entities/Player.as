@@ -13,7 +13,10 @@ package entities
 	 */
 	public class Player extends Entity 
 	{
+		// GRAPH //
 		[Embed(source = "../../assets/player.png")] private const GRAPHIC:Class;
+		
+		// SOUNDS //
 		
 		public var image:Image;
 		
@@ -27,6 +30,7 @@ package entities
 		public var fricty:Number;
 		public var frictx:Number;
 		
+		public var ObjBravoure : Bravoure;
 		
 		public var lightOn:Boolean = true;
 		public var debug:Boolean = true;
@@ -36,9 +40,11 @@ package entities
 		{
 			image = new Image(GRAPHIC);
 			super(200, 100, image);
+			name = "player";
 			type = "player";
-			//width = image.width;
+			ObjBravoure = new Bravoure();
 			width = 32;
+			//width = image.width;
 			//height = image.height;
 			height = 32;
 			
@@ -58,6 +64,10 @@ package entities
 			if (collide("ennemy", x, y))
 			{
 				FP.world.remove(this);
+			}
+			if (collide("wall",  x, y))
+			{
+				trace ("collision");
 			}
 			
 			if (debug)
@@ -79,10 +89,8 @@ package entities
 			//else if (Input.check(Key.DOWN)) dy = speed;
 			}
 			
-			
 			if (Input.mouseDown) lightOn = true;
 			else lightOn = false;
-			
 	
 			//dy += gravity;
 			dy *= fricty;
@@ -94,10 +102,7 @@ package entities
 			x += dx;
 			
 			super.update();
-			
-			
-		}
-		
+		}		
 	}
 
 }
