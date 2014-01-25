@@ -77,7 +77,7 @@ package entities
 			type = "player";
 			//SOUNDS
 			
-			baby = new Sfx(SOUND);
+			//baby = new Sfx(SOUND);
 			
 			
 			
@@ -212,6 +212,8 @@ package entities
 				{
 					if (onStairs && stairsDirection == "right")
 					{
+						x += 1;
+						y -= 1; 
 					}
 					else if (w && x < w.x) dx = 0;
 					else dx = speed;
@@ -251,7 +253,7 @@ package entities
 		{
 			if (!played)
 			{
-				if (collidePoint(x, y, 200, 100)) sound = baby;
+				if (collidePoint(x, y, 200, 100)) sound = null;
 			//	else if (collidePoint(x, y, 250, 300)) sound = bouteille;
 				else sound = null;
 				
