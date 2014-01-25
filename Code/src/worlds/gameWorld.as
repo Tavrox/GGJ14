@@ -15,7 +15,7 @@ package worlds
 	public class gameWorld extends World 
 	{
 		//[Embed(source = "../../assets/bg.png")] private const BG:Class;
-		[Embed(source = "../../assets/mockup-bastien.jpg")] private const BG:Class;
+		[Embed(source = "../../assets/mockup-merge1.jpg")] private const BG:Class;
 		[Embed(source = "../../assets/sfx/ambiance.mp3")] private const MUSIC:Class;
 		
 		//[Embed(source = '../../assets/sfx/break_big.mp3', mimeType = 'application/octet-stream')]
@@ -33,8 +33,8 @@ package worlds
 		public var angle:Number;
 		public var valeurY:Number;
 		
-		public var bravour:Number = 50;
-		public var second:Number = 0;
+		public var monsterSpeed:Number = 0;
+		
 		public var lightTimer:Number = 0;
 		
 		public function gameWorld() 
@@ -42,20 +42,21 @@ package worlds
 			super();
 			
 			ambiance = new Sfx(MUSIC);
-			ambiance.loop();
+			//ambiance.loop();
 			
-			lighting = new Lighting(FP.width, FP.height, 0xFFFFFF, -1000);
+			lighting = new Lighting(FP.width, FP.height, 0xffffff, -1000);
 			background = new Entity(0, 0, new Image(BG));
 			add(background);
-			add(lighting);
+			//add(lighting);
 			player = new Player();
 			monster = new Monster();
 			
-			add(new Wall(0, 150, 121, 11));
-			add(new Wall(224, 150, 736, 11));
-			add(new Wall(0, 260, 960, 11));
-			add(new Stairs());
-			//add(monster);
+			add(new Wall(0, 150, 121, 11, "floor"));
+			add(new Wall(180, 150, 736, 11, "floor"));
+			add(new Wall(0, 260, 960, 11, "floor"));
+			add(new Wall(500, 0, 10, 200, "wall"));
+			//add(new Stairs());
+			add(monster);
 			add(player);
 			generateStairs(120, 155);
 		}
@@ -64,35 +65,22 @@ package worlds
 		override public function update():void 
 		{
 			
+			
 			if (player.lightOn) 
 			{
+				monster.enervement += 0.01;
 				player.mouseLight.active = true;
-				monster.monsterLight.active = true;
-				monster.visible = true;
-				monster.moveTowards(player.x, player.y, 5);
-				player.speed = 0.5;
-				lightTimer ++;
 			}
 			else
-			{
-				monster.monsterLight.active = false;
+			{	
 				player.mouseLight.active = false;
-				monster.visible = false;
-				player.speed = 1;
-				lightTimer --;
 			}
+			monster.moveTowards(player.x, player.y, 0.10 * monster.enervement + int(player.lightOn) * 2);
+			lightTimer++;
 			
-			if (lightTimer >= 180) lightTimer = 180;
-			if (lightTimer <= -180) lightTimer = -180;
 			
-			bravour -= 0.01*int(player.lightOn);
+			FP.log(lightTimer / 180);
 			
-			if (bravour <= 0) bravour = 0;
-			if (bravour >= 100) bravour = 100;
-			
-			second = lightTimer / 60;
-			
-			FP.console.log("lightTimer : " + second.toFixed() + " bravour : " + bravour.toFixed() + " " + player.x.toFixed() + player.y.toFixed() + player.onStairs);
 			super.update();
 		}
 		
@@ -100,7 +88,7 @@ package worlds
 		{
 			for(var i:uint=0;i<11;i++)
 			{
-				add (new Wall(x+i*10, y+i*10, 10, 10, true, "left"));
+				add (new Wall(x+i*10, y+i*10, 10, 10, "stairs", "left"));
 			}
 		}
 	}

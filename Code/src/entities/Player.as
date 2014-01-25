@@ -23,6 +23,8 @@ package entities
 		[Embed(source = "../../assets/lightPerso.png")] private const LIGHTPERSO:Class;
 		
 		// SOUNDS //
+		[Embed(source = "../../assets/sfx/player_walk.mp3")] private const STEP:Class;
+		
 		[Embed(source = "../../assets/sfx/baby_cry_1.mp3")] private const SOUND:Class;
 		
 		public var image:Spritemap;
@@ -56,19 +58,21 @@ package entities
 		public var angle:Number;
 		
 		public var sound:Sfx;
+		public var step:Sfx;
 		public var baby:Sfx;
 		
 		public var played:Boolean;
 		
 		public function Player() 
 		{
-			x = 200;
+			x = 10;
 			y = 100;
 			image = new Spritemap(GRAPHIC, 16, 32);
 			image.add("walkLeft", [0, 1, 2, 3], 6, true);
 			image.add("walkRight", [4, 5, 6, 7], 6, true);
 			image.add("idleLeft", [0], 4, false);
 			image.add("idleRight", [4], 4, false);
+			step = new Sfx(STEP);
 			name = "player";
 			type = "player";
 			//SOUNDS
@@ -105,16 +109,16 @@ package entities
 			frictx = 0.90;
 			
 			imageMouseLight = new Image(LIGHT);
-			imageMouseLight.originX = this.originX;
-			imageMouseLight.originY = this.originY - 8;
+			imageMouseLight.originX = this.originX + 1;
+			imageMouseLight.originY = this.originY - 4;
 			
 			imagePersoLight = new Image(LIGHTPERSO);
-			imagePersoLight.originX = this.originX ;
-			imagePersoLight.originY = this.originY - 8;
+			imagePersoLight.originX = this.originX + 2;
+			imagePersoLight.originY = this.originY - 3;
 			
 			
 			mouseLight = new Light(this.x, this.y, imageMouseLight, 3, 1);
-			persoLight = new Light(this.x, this.y, imagePersoLight, 3, 1);
+			persoLight = new Light(this.x, this.y, imagePersoLight, 2, 1);
 			
 			gameWorld.lighting.add(persoLight);
 			gameWorld.lighting.add(mouseLight);
@@ -123,7 +127,6 @@ package entities
 		
 		override public function update():void
 		{
-			
 			if (FP.world.mouseX < this.x) direction = "left";
 			else direction = "right";
 			
@@ -151,11 +154,13 @@ package entities
 				
 				if (Input.check(Key.LEFT) || Input.check(Key.RIGHT))
 				{
+					step.loop();
 					if (direction == "left") image.play("walkLeft");
 					else image.play("walkRight");
 				}
 				else 
 				{
+					step.stop();
 					if (direction == "left") image.play("idleLeft");
 					else image.play("idleRight");
 				}
@@ -166,14 +171,18 @@ package entities
 			else lightOn = false;
 	
 			if (!debug) dy += gravity;
-			var w:Wall = collide("wall",  x, y) as Wall;
-			if (w)
+			var f:Wall = collide("floor",  x, y+1) as Wall;
+			if (f && y < f.y)
 			{
+				if (this.y > f.y) this.y -= 2;
+				dx = 0;
 				dy = 0;
 			}
 			
+			var w:Wall = collide("wall", x, y) as Wall;
+			
 			var s:Wall = collide("stairs", x, y) as Wall;
-			if (s && !w)
+			if (s && !f)
 			{
 				if (s.direction == "left" && this.x > s.x || s.direction == "right" && this.x < s.x)
 				{
@@ -185,7 +194,7 @@ package entities
 				}
 			}
 			else onStairs = false;
-			if (Input.pressed(Key.UP) && dy == 0)	dy = -jump;
+			if (Input.pressed(Key.UP) && dy == 0)	dy = -jump; //TODO: Largeur Jump;
 			//else if (Input.check(Key.DOWN)) dy = speed;
 			
 				if (Input.check(Key.LEFT)) 
@@ -196,6 +205,7 @@ package entities
 						y -= 1;
 						
 					}
+					else if (w && x > w.x) dx = 0;
 					else dx = -speed;
 				}
 				else if (Input.check(Key.RIGHT)) 
@@ -203,6 +213,7 @@ package entities
 					if (onStairs && stairsDirection == "right")
 					{
 					}
+					else if (w && x < w.x) dx = 0;
 					else dx = speed;
 				}
 			}

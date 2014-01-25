@@ -13,15 +13,14 @@ package entities
 		//[Embed(source = "../../assets/walldebug.png")] private const GRAPHIC:Class;
 		public var image:Image;
 		public var direction:String;
-		public function Wall(_x:int, _y:int, _width:int, _height:int, stairs:Boolean = false, _direction:String = "") 
+		public function Wall(_x:int, _y:int, _width:int, _height:int, _type:String = "", _direction:String = "") 
 		{
 			//image = new Image(GRAPHIC);
 			
 			super(_x, _y);
 			setHitbox(_width, _height);
-			if(stairs)centerOrigin();
-			if (stairs) type = "stairs";
-			else type = "wall";
+			type = _type;
+			if (type == "stairs") centerOrigin();
 			direction = _direction;
 		}
 		
