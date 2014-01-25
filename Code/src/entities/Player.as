@@ -80,6 +80,9 @@ package entities
 			}
 			
 			
+			if (Input.mouseDown) lightOn = true;
+			else lightOn = false;
+			
 	
 			//dy += gravity;
 			dy *= fricty;
@@ -87,8 +90,8 @@ package entities
 			
 			dx *= frictx;
 			
-			y += dy.toFixed(2);
-			x += dx.toFixed(2);
+			y += dy;
+			x += dx;
 			
 			super.update();
 			
