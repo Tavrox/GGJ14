@@ -20,8 +20,6 @@ package entities
 			super(120, 160, image);
 			setHitbox(image.width, image.height);
 			//type = "wall";
-		
-			
 		}
 		
 	}
