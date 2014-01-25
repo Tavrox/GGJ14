@@ -25,7 +25,6 @@ package worlds
 		public var background:Entity;
 		public var player:Player;
 		public var monster:Monster;
-		public var speed:Number = 10;
 		
 		public var ambiance:Sfx;
 		
@@ -58,7 +57,7 @@ package worlds
 			add(new Stairs());
 			//add(monster);
 			add(player);
-			generateStairs(100, 100);
+			generateStairs(120, 155);
 		}
 		
 		
@@ -71,7 +70,7 @@ package worlds
 				monster.monsterLight.active = true;
 				monster.visible = true;
 				monster.moveTowards(player.x, player.y, 5);
-				player.speed = 1;
+				player.speed = 0.5;
 				lightTimer ++;
 			}
 			else
@@ -79,7 +78,7 @@ package worlds
 				monster.monsterLight.active = false;
 				player.mouseLight.active = false;
 				monster.visible = false;
-				player.speed = 2;
+				player.speed = 1;
 				lightTimer --;
 			}
 			
@@ -93,15 +92,15 @@ package worlds
 			
 			second = lightTimer / 60;
 			
-			FP.console.log("lightTimer : " + second.toFixed() + " bravour : " + bravour.toFixed() + " " + player.x.toFixed() + player.y.toFixed());
+			FP.console.log("lightTimer : " + second.toFixed() + " bravour : " + bravour.toFixed() + " " + player.x.toFixed() + player.y.toFixed() + player.onStairs);
 			super.update();
 		}
 		
-		public function generateStairs(x : int, y : int)
+		public function generateStairs(x : int, y : int):void
 		{
-			for(var i:uint=0;i<10;i++)
+			for(var i:uint=0;i<11;i++)
 			{
-				add (new Wall(x+i*10, y+i*10, 10, 10));
+				add (new Wall(x+i*10, y+i*10, 10, 10, true, "left"));
 			}
 		}
 	}

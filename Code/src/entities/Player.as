@@ -1,9 +1,11 @@
 package entities 
 {
+	import flash.display.Sprite;
 	import flash.media.Sound;
 	import net.flashpunk.Entity;
 	import net.flashpunk.Graphic;
 	import net.flashpunk.graphics.Image;
+	import net.flashpunk.graphics.Spritemap;
 	import net.flashpunk.Mask;
 	import net.flashpunk.utils.*;
 	import net.flashpunk.*;
@@ -23,7 +25,11 @@ package entities
 		// SOUNDS //
 		[Embed(source = "../../assets/sfx/baby_cry_1.mp3")] private const SOUND:Class;
 		
-		public var image:Image;
+		public var image:Spritemap;
+		public var direction:String;
+		
+		public var onStairs:Boolean;
+		public var stairsDirection:String;
 		
 		public var dy:Number;
 		public var dx:Number;
@@ -58,7 +64,11 @@ package entities
 		{
 			x = 200;
 			y = 100;
-			image = new Image(GRAPHIC);
+			image = new Spritemap(GRAPHIC, 16, 32);
+			image.add("walkLeft", [0, 1, 2, 3], 6, true);
+			image.add("walkRight", [4, 5, 6, 7], 6, true);
+			image.add("idleLeft", [0], 4, false);
+			image.add("idleRight", [4], 4, false);
 			name = "player";
 			type = "player";
 			//SOUNDS
@@ -91,8 +101,8 @@ package entities
 			
 			jump = 10;
 			gravity = 0.8;
-			fricty = 0.92;
-			frictx = 0.92;
+			fricty = 0.98;
+			frictx = 0.90;
 			
 			imageMouseLight = new Image(LIGHT);
 			imageMouseLight.originX = this.originX;
@@ -113,6 +123,10 @@ package entities
 		
 		override public function update():void
 		{
+			
+			if (FP.world.mouseX < this.x) direction = "left";
+			else direction = "right";
+			
 			if (collide("ennemy", x, y))
 			{
 				FP.world.remove(this);
@@ -133,21 +147,64 @@ package entities
 			
 			else
 			{
-				if (Input.check(Key.LEFT))	dx = -speed;
-				else if (Input.check(Key.RIGHT)) dx = speed;
+				
+				
+				if (Input.check(Key.LEFT) || Input.check(Key.RIGHT))
+				{
+					if (direction == "left") image.play("walkLeft");
+					else image.play("walkRight");
+				}
+				else 
+				{
+					if (direction == "left") image.play("idleLeft");
+					else image.play("idleRight");
+				}
+				
 				
 			
 			if (Input.mouseDown) lightOn = true;
 			else lightOn = false;
 	
 			if (!debug) dy += gravity;
-			
-			if (collide("wall",  x, y+1))
+			var w:Wall = collide("wall",  x, y) as Wall;
+			if (w)
 			{
 				dy = 0;
 			}
-				if (Input.pressed(Key.UP) && dy == 0)	dy = -jump;
+			
+			var s:Wall = collide("stairs", x, y) as Wall;
+			if (s && !w)
+			{
+				if (s.direction == "left" && this.x > s.x || s.direction == "right" && this.x < s.x)
+				{
+					onStairs = true;
+					dy = 0;
+					stairsDirection = s.direction;
+					if (stairsDirection == "left" && dx < 0) dx = 0;
+					else if (stairsDirection == "right" && dx > 0) dx = 0;
+				}
+			}
+			else onStairs = false;
+			if (Input.pressed(Key.UP) && dy == 0)	dy = -jump;
 			//else if (Input.check(Key.DOWN)) dy = speed;
+			
+				if (Input.check(Key.LEFT)) 
+				{
+					if (onStairs && stairsDirection == "left")
+					{
+						x -= 1;
+						y -= 1;
+						
+					}
+					else dx = -speed;
+				}
+				else if (Input.check(Key.RIGHT)) 
+				{
+					if (onStairs && stairsDirection == "right")
+					{
+					}
+					else dx = speed;
+				}
 			}
 			
 			dx *= frictx;
@@ -159,6 +216,7 @@ package entities
 			mouseLight.y = this.y;
 			persoLight.x = this.x;
 			persoLight.y = this.y;
+			
 			
 			if (FP.world.mouseY < this.y)
 			{

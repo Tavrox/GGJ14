@@ -19,13 +19,8 @@ package entities
 			image = new Image(GRAPHIC);
 			super(120, 160, image);
 			setHitbox(image.width, image.height);
-<<<<<<< HEAD
-			type = "stairs";
-		
-			
-=======
-			//type = "wall";
->>>>>>> 694d5f8aaa0167d7495e4e46a3bc42ed40553d52
+			centerOrigin();
+			//type = "stairs";
 		}
 		
 	}
