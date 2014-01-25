@@ -7,52 +7,52 @@
             <key>character0001.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{0,0},{32,32}}</string>
+                <string>{{0,0},{16,32}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{32,32}}</string>
+                <string>{{8,0},{16,32}}</string>
                 <key>sourceSize</key>
                 <string>{32,32}</string>
             </dict>
             <key>character0002.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{32,0},{32,32}}</string>
+                <string>{{16,0},{16,32}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{32,32}}</string>
+                <string>{{8,0},{16,32}}</string>
                 <key>sourceSize</key>
                 <string>{32,32}</string>
             </dict>
             <key>character0003.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{0,32},{32,32}}</string>
+                <string>{{0,32},{16,32}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{32,32}}</string>
+                <string>{{8,0},{16,32}}</string>
                 <key>sourceSize</key>
                 <string>{32,32}</string>
             </dict>
             <key>character0004.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{32,32},{32,32}}</string>
+                <string>{{16,32},{16,32}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
                 <false/>
                 <key>sourceColorRect</key>
-                <string>{{0,0},{32,32}}</string>
+                <string>{{8,0},{16,32}}</string>
                 <key>sourceSize</key>
                 <string>{32,32}</string>
             </dict>
@@ -64,9 +64,9 @@
             <key>realTextureFileName</key>
             <string>character.png</string>
             <key>size</key>
-            <string>{64,64}</string>
+            <string>{32,64}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:07f3f5adc95e288bac2e174c8faa3a52:1/1$</string>
+            <string>$TexturePacker:SmartUpdate:6fb5d2404aff88528a9122fb73cc2037:1/1$</string>
             <key>textureFileName</key>
             <string>character.png</string>
         </dict>
