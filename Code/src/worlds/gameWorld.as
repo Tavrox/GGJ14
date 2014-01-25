@@ -1,6 +1,7 @@
 package worlds 
 {
 	import entities.*;
+	import flash.display.InteractiveObject;
 	import net.flashpunk.Entity;
 	import net.flashpunk.graphics.Image;
 	import net.flashpunk.World;
@@ -16,6 +17,10 @@ package worlds
 		//[Embed(source = "../../assets/bg.png")] private const BG:Class;
 		[Embed(source = "../../assets/mockup-bastien.jpg")] private const BG:Class;
 		[Embed(source = "../../assets/sfx/ambiance.mp3")] private const MUSIC:Class;
+		
+		//[Embed(source = '../../assets/sfx/break_big.mp3', mimeType = 'application/octet-stream')]
+		//private const sfxBreak:Class;
+		//public var _sfxBreak :Sfx = new Sfx(sfxBreak);
 		
 		public var background:Entity;
 		public var player:Player;
@@ -53,13 +58,12 @@ package worlds
 			add(new Stairs());
 			//add(monster);
 			add(player);
+			generateStairs(100, 100);
 		}
 		
 		
-		
-		
 		override public function update():void 
-		{	
+		{
 			
 			if (player.lightOn) 
 			{
@@ -91,6 +95,14 @@ package worlds
 			
 			FP.console.log("lightTimer : " + second.toFixed() + " bravour : " + bravour.toFixed() + " " + player.x.toFixed() + player.y.toFixed());
 			super.update();
+		}
+		
+		public function generateStairs(x : int, y : int)
+		{
+			for(var i:uint=0;i<10;i++)
+			{
+				add (new Wall(x+i*10, y+i*10, 10, 10));
+			}
 		}
 	}
 
