@@ -24,8 +24,8 @@ package entities
 		
 		// SOUNDS //
 		[Embed(source = "../../assets/sfx/player_walk.mp3")] private const STEP:Class;
-		
-		[Embed(source = "../../assets/sfx/baby_cry_1.mp3")] private const SOUND:Class;
+		[Embed(source = "../../assets/sfx/light_switch_on.mp3")] private const LIGHTON:Class;
+		[Embed(source = "../../assets/sfx/light_switch_off.mp3")] private const LIGHTOFF:Class;
 		
 		public var image:Spritemap;
 		public var direction:String;
@@ -57,22 +57,26 @@ package entities
 		
 		public var angle:Number;
 		
-		public var sound:Sfx;
+		public var switchOn:Sfx;
+		public var switchOff:Sfx;
 		public var step:Sfx;
-		public var baby:Sfx;
 		
 		public var played:Boolean;
 		
+		public var onFloor:Boolean;
+		public var pressed:Boolean;
+		public var onAir:Boolean;
+		
 		public function Player() 
 		{
-			x = 10;
-			y = 100;
 			image = new Spritemap(GRAPHIC, 16, 32);
 			image.add("walkLeft", [0, 1, 2, 3], 6, true);
 			image.add("walkRight", [4, 5, 6, 7], 6, true);
 			image.add("idleLeft", [0], 4, false);
 			image.add("idleRight", [4], 4, false);
 			step = new Sfx(STEP);
+			switchOn = new Sfx(LIGHTON);
+			switchOff = new Sfx(LIGHTOFF);
 			name = "player";
 			type = "player";
 			//SOUNDS
@@ -93,17 +97,17 @@ package entities
 			//ObjBravoure = new Bravoure();
 			
 			width = image.width;
-			height = image.height;
+			height = image.height-2;
 			image.centerOO();
 			
 			centerOrigin();
 			graphic = image;
-			speed = 3;
+			speed = 0.5;
 			
 			dy = 0;
 			dx = 0;
 			
-			jump = 10;
+			jump = 7;
 			gravity = 0.8;
 			fricty = 0.98;
 			frictx = 0.90;
@@ -128,148 +132,210 @@ package entities
 		override public function update():void
 		{
 			if (FP.world.mouseX < this.x) direction = "left";
-			else direction = "right";
-			
-			if (collide("ennemy", x, y))
+			else direction = "right";				
+				//
+			if (Input.check(Key.LEFT) || Input.check(Key.RIGHT))
 			{
-				FP.world.remove(this);
+				step.loop();
+				if (direction == "left") image.play("walkLeft");
+				else image.play("walkRight");
 			}
-			
-			checkSounds();
-			
-			if (debug)
+			else 
 			{
-				if (Input.check(Key.LEFT)) dx = -speed;
-				else if (Input.check(Key.RIGHT)) dx = speed;
-				
-				if (Input.check(Key.UP)) dy = -speed;
-				else if (Input.check(Key.DOWN)) dy = speed;
+				step.stop();
+				if (direction == "left") image.play("idleLeft");
+				else image.play("idleRight");
 			}
+			if (dx != 0) step.loop();	
 			
-			
-			
-			else
-			{
-				
-				
-				if (Input.check(Key.LEFT) || Input.check(Key.RIGHT))
-				{
-					step.loop();
-					if (direction == "left") image.play("walkLeft");
-					else image.play("walkRight");
-				}
-				else 
-				{
-					step.stop();
-					if (direction == "left") image.play("idleLeft");
-					else image.play("idleRight");
-				}
-				
-				
-			
-			if (Input.mouseDown) lightOn = true;
+			if (Input.mouseDown)
+			{ 
+				lightOn = true;
+			}
 			else lightOn = false;
-	
-			if (!debug) dy += gravity;
-			var f:Wall = collide("floor",  x, y+1) as Wall;
-			if (f && y < f.y)
+			if (Input.mousePressed)
 			{
-				if (this.y > f.y) this.y -= 2;
-				dx = 0;
-				dy = 0;
+				switchOn.play();
 			}
-			
-			var w:Wall = collide("wall", x, y) as Wall;
-			
-			var s:Wall = collide("stairs", x, y) as Wall;
-			if (s && !f)
+			if (Input.mouseReleased)
 			{
-				if (s.direction == "left" && this.x > s.x || s.direction == "right" && this.x < s.x)
-				{
-					onStairs = true;
-					dy = 0;
-					stairsDirection = s.direction;
-					if (stairsDirection == "left" && dx < 0) dx = 0;
-					else if (stairsDirection == "right" && dx > 0) dx = 0;
-				}
+				switchOff.play();
 			}
-			else onStairs = false;
-			if (Input.pressed(Key.UP) && dy == 0)	dy = -jump; //TODO: Largeur Jump;
-			//else if (Input.check(Key.DOWN)) dy = speed;
+			//
+			//var f:Wall = collide("floor", x, y + 1) as Wall;
+			//var w:Wall = collide("wall", x, y) as Wall;
+			//var s:Wall = collide("stairs", x, y) as Wall;
+			//var o:Wall = collide("object", x, y) as Wall;
+			//
+			//dy += gravity;
+			//
+			//if (f && y < f.y || o && y < o.y)
+			//{
+				//if (f)
+				//{
+					//if (this.y > f.y) this.y -= 2;
+				//}
+				//if (o)
+				//{
+					//if (this.y > o.y) 
+					//{
+						//this.y -= 2; 
+					//}
+				//}
+				//dy = 0;
+			//}
+			//
+			//if (Input.check(Key.LEFT)) 
+			//{
+				//if (onStairs && stairsDirection == "left")
+				//{
+					//x -= 1;
+					//y -= 1;
+				//}
+				//else if ((w && x > w.x )||( o && x > o.x+o.width)) dx = 0;
+				//else dx = -speed;
+			//}
+			//
+			//else if (Input.check(Key.RIGHT)) 
+			//{
+				//if (onStairs && stairsDirection == "right" )
+				//{
+					//x += 1;
+					//y -= 1; 
+				//}
+				//else if ((w && x < w.x ) || (o && x < o.x)) dx = 0;
+				//else dx = speed;
+			//}
+			//
+			//
+			//if (f && y < f.y) y = f.y-f.height;
+			//
+			//if (s && !f)
+			//{
+				//if (s.direction == "left" && this.x > s.x || s.direction == "right" && this.x < s.x)
+				//{
+					//onStairs = true;
+					//dy = 0;
+					//stairsDirection = s.direction;
+					//if (stairsDirection == "left" && dx < 0) dx = 0;
+					//else if (stairsDirection == "right" && dx > 0) dx = 0;
+				//}
+			//}
+			//else onStairs = false;
+			//if (Input.pressed(Key.UP) && dy == 0)	dy = -jump; 
+			//
+			//dx *= frictx;
+			//if (dy != 0 && !onStairs) dx *= 1.1;
+			//
+			//dy *= fricty;
+			//
+			//y += dy;
+			//x += dx;
+			//
+			//
 			
-				if (Input.check(Key.LEFT)) 
-				{
-					if (onStairs && stairsDirection == "left")
-					{
-						x -= 1;
-						y -= 1;
-						
-					}
-					else if (w && x > w.x) dx = 0;
-					else dx = -speed;
-				}
-				else if (Input.check(Key.RIGHT)) 
-				{
-					if (onStairs && stairsDirection == "right")
-					{
-						x += 1;
-						y -= 1; 
-					}
-					else if (w && x < w.x) dx = 0;
-					else dx = speed;
-				}
-			}
-			
-			dx *= frictx;
-			
-			dy *= fricty;
-			y += dy;
-			x += dx;
 			mouseLight.x = this.x;
 			mouseLight.y = this.y;
 			persoLight.x = this.x;
 			persoLight.y = this.y;
 			
 			
-			if (FP.world.mouseY < this.y)
+			angle = Math.atan((FP.world.mouseX - this.x) / (FP.world.mouseY - this.y));
+			angle = angle * 180 / Math.PI;
+			
+			if (FP.world.mouseY < this.y) angle += 90;	
+			else angle -= 90;
+			
+			imageMouseLight.angle = angle;
+			//
+			if (Input.check(Key.LEFT)) 
+			{ 
+				dx -= speed;
+				pressed = true;
+			}
+			else if (Input.check(Key.RIGHT))
 			{
-				angle = Math.atan((FP.world.mouseX - this.x) / (FP.world.mouseY - this.y));
+				dx += speed;
+				pressed = true;
+			}
+			else pressed = false;
+			var e:Wall = collide("floor", x, y + 1) as Wall;
+			if (e)
+		{			
+				//FP.log(e.style);
+				if (e.style == "floor") onFloor = true;
+				else if (e.style == "stairs") onStairs = true;
 
-				angle = angle * 180 / Math.PI;
-				angle += 90;	
+					dy = 0;
+					if (Input.check(Key.UP))
+					{
+						dy -= jump;
+						dx *= 1.1;
+					}
+				
 			}
 			else
 			{
-				if (FP.world.mouseX < this.x ) angle = 180;
-				else angle = 0;
+				dy += gravity;
+				onFloor = false;
+				onStairs = false;
 			}
 			
-			imageMouseLight.angle = angle;
+			if (Math.abs(dx) < 1 && !pressed)
+			{
+				if (e)
+				{
+					dx = 0;
+				} 
 			
+			}
+			dx *= frictx;
+			dy *= fricty;
+			if (x < 0+width/2) x = 0+width/2;
+			if (x > FP.width-width/2) x = FP.width - width/2;
+			
+			adjustXPos();
+			adjustYPos();
 			super.update();
 		}
 		
-		public function checkSounds():void
+		public function adjustXPos():void
 		{
-			if (!played)
+			for (var i:int = 0; i < Math.abs(dx); i++)
 			{
-				if (collidePoint(x, y, 200, 100)) sound = null;
-			//	else if (collidePoint(x, y, 250, 300)) sound = bouteille;
-				else sound = null;
-				
-				if (sound) 
+				if (!collide("floor", x + FP.sign(dx), y))
 				{
-					played = true;
-					sound.play();
+					x += FP.sign(dx);
+				}
+				else
+				{
+					dx = 0;
+					break;
+				}
+			}
+		}
+		
+		public function adjustYPos():void
+		{
+			for (var i:int = 0; i < Math.abs(dy); i ++)
+			{
+				if (!collide("floor", x, y + FP.sign(dy)))
+				{
+					onAir = true;
+					y += FP.sign(dy);
+				}
+				else
+				{
+					dy = 0;
+					break;
 				}
 				
 			}
-			else
-			{
-				played = false;
-			}
-			
 		}
+			
+			
+		
+		
 	}
 
 }

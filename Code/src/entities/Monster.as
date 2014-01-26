@@ -19,39 +19,44 @@ package entities
 		[Embed(source = "../../assets/monster_small.png")] private const SMALL:Class;
 		[Embed(source = "../../assets/monster_middle.png")] private const MIDDLE:Class;
 		[Embed(source = "../../assets/monster_big.png")] private const BIG:Class;
-		public var image:Image;
+		public var imageSmall:Image;
+		public var imageMiddle:Image;
+		public var imageBig:Image;
 		
 		public var monsterLight:Light;
 		public var imageMonsterLight:Image;
 		public var enervement:Number = 1;
+		public var palier:int;
 		public function Monster() 
 		{
-			image = new Image(SMALL);
-			imageMonsterLight = new Image(SMALL_EYES);
-		
+			imageSmall = new Image(SMALL);
+			imageMiddle = new Image(MIDDLE);
+			imageBig = new Image(BIG);
+			
 			
 			monsterLight = new Light(this.x, this.y, imageMonsterLight);
-			setHitbox(image.width, image.height);
-			image.centerOO();
+			
+			changePalier(1);
+			imageSmall.centerOO();
+			imageMiddle.centerOO();
+			imageBig.centerOO();
 			centerOrigin();		
 			imageMonsterLight.originX = this.originX;
 			imageMonsterLight.originY = this.originY;
 			gameWorld.lighting.add(monsterLight);
 			
-			super(700, 200, image);
+			super(700, 200, imageSmall);
 		}
 		
 		override public function update():void
 		{
-			if (enervement == 100)
+			if (enervement >= 10 && palier == 1)
 			{
-					image = new Image(MIDDLE);
-					imageMonsterLight = new Image(MIDDLE_EYES);
+				changePalier(2);
 			}
-			if (enervement == 200)
+			if (enervement >= 25 && palier == 2)
 			{
-					image = new Image(BIG);
-					imageMonsterLight = new Image(BIG_EYES);
+				changePalier(3);
 			}
 		
 			monsterLight.x = this.x;
@@ -59,6 +64,38 @@ package entities
 			super.update();
 		}
 		
+		public function changePalier(papa:int):void
+		{
+			palier = papa;
+			switch(palier)
+			{
+				case 1:
+					graphic = imageSmall;
+					setHitbox(imageSmall.width, imageSmall.height);
+					centerOrigin();		
+					monsterLight.image = imageMonsterLight = new Image(SMALL_EYES);
+					imageMonsterLight.originX = this.originX;
+					imageMonsterLight.originY = this.originY;
+					break;
+				case 2:
+					graphic = imageMiddle;
+					setHitbox(imageMiddle.width, imageMiddle.height);
+					centerOrigin();		
+					monsterLight.image = imageMonsterLight = new Image(MIDDLE_EYES);
+					imageMonsterLight.originX = this.originX;
+					imageMonsterLight.originY = this.originY;
+					break;
+				case 3:
+					graphic = imageBig;
+					setHitbox(imageBig.width, imageBig.height);
+					centerOrigin();		
+					monsterLight.image = imageMonsterLight = new Image(BIG_EYES);
+					imageMonsterLight.originX = this.originX;
+					imageMonsterLight.originY = this.originY;
+					break;
+					
+			}
+		}
 	}
 
 }

@@ -9,7 +9,7 @@ package
 		public function Main()
 		{
 			super(960, 600, 60, false);
-			FP.world = new MyWorld();
+			FP.world = new menuWorld();
 		}
 	}
 }

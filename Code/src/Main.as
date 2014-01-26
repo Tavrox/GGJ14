@@ -1,7 +1,7 @@
 package 
 {
 	import net.flashpunk.*;
-	import worlds.gameWorld;
+	import worlds.*;
 	
 	/**
 	 * ...
@@ -24,9 +24,9 @@ package
 		public function Main():void
 		{
 			super(960, 600, 60, false);
-			FP.world = new gameWorld();
-			FP.console.debug = true;
+			FP.world = new menuWorld();
 			FP.console.enable();
+			FP.console.debug = true;
 		}
 		
 		override public function init():void

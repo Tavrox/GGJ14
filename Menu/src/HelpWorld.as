@@ -9,11 +9,11 @@ package
 	import net.flashpunk.graphics.Text;
 	import net.flashpunk.graphics.Stamp;
 	
-	public class HelpWorld extends World
+	public class helpWorld extends World
 	{
 		[Embed(source = "pict/controls.png")] private const WALL:Class;
 		[Embed(source="pict/switch.png")] private const SWITCH:Class;
-		public function HelpWorld()
+		public function helpWorld()
 		{
 			add(new Entity(0, 0, new Image(WALL)));
 			add(new Entity(15, 500, new Image(SWITCH)));
@@ -32,7 +32,7 @@ package
 			{
 				if (mouseX > 30 && mouseX < 60 && mouseY > 500 && mouseY < 530)
 				{
-					FP.world = new MyWorld;
+					FP.world = new menuWorld;
 					trace("escape");
 				}
 			}
