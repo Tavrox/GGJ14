@@ -25,8 +25,8 @@ package
 		{
 			super(960, 600, 60, false);
 			FP.world = new menuWorld();
-			FP.console.enable();
-			FP.console.debug = true;
+			//FP.console.enable();
+		//	FP.console.debug = true;
 		}
 		
 		override public function init():void

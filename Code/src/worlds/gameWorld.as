@@ -4,6 +4,7 @@ package worlds
 	import flash.display.InteractiveObject;
 	import net.flashpunk.Entity;
 	import net.flashpunk.graphics.Image;
+	import net.flashpunk.graphics.Text;
 	import net.flashpunk.World;
 	import net.flashpunk.*;
 	import net.flashpunk.utils.*;
@@ -57,7 +58,9 @@ package worlds
 		[Embed(source = "../../assets/sfx/Soft/toaster.mp3")] private const HARD08:Class;
 		[Embed(source = "../../assets/sfx/Soft/wind.mp3")] private const HARD09:Class;
 		
-		[Embed(source = "../../assets/sfx/toilet.mp3")] private const TOILETS:Class;
+		[Embed(source = "../../assets/sfx/Other/toilet.mp3")] private const TOILETS:Class;
+		
+		[Embed(source="../../assets/Brain Flower Euro.ttf", embedAsCFF = "false", fontFamily = 'My Font')] private const MY_FONT:Class;
 		
 		
 		
@@ -91,9 +94,17 @@ package worlds
 		public var lightTimer:Number = 0;
 		public var timer:int = 0;
 		
+		public var textEntity:Text;
+		public var caca:Entity;
+		
 		public function gameWorld() 
 		{
 			super();
+			
+			textEntity = new Text("Find the toilets", 0, 0);
+			textEntity.color = 0xFFFFFF;
+			textEntity.size = 36;
+			textEntity.font = "My font";
 			
 			ambiance = new Sfx(AMBIENT);
 			ambiance.volume = 0.2;
@@ -110,10 +121,12 @@ package worlds
 			lighting = new Lighting(FP.width, FP.height, 0xffffff, -1000);
 			background = new Entity(0, 0, new Image(BG));
 			add(background);
-			//add(lighting);
+			add(lighting);
+			caca = new Entity(20, 25, textEntity);
+			caca.layer = - 1001;
 			player = new Player();
 			monster = new Monster();
-			
+			add(caca);
 			
 			
 			
@@ -198,9 +211,9 @@ package worlds
 			player.y = 118;
 			monster.x = 700;
 			monster.y = 200;
-			musique.loop(0.1);
-			ambiance.loop(0.9);
-			stress.loop(0.8);
+			musique.loop(1);
+			ambiance.loop(1);
+			stress.loop(1);
 			monster.changePalier(1);
 			monster.enervement = 0;
 			
@@ -210,6 +223,8 @@ package worlds
 		
 		override public function update():void 
 		{
+			if (player.x < monster.x) monster.orientation = "LEFT";
+			else if (player.x > monster.x) monster.orientation = "RIGHT";
 		//	FP.log(player.onFloor.toString() + player.onStairs.toString() + player.pressed.toString() );
 			if (player.lightOn) 
 			{
@@ -233,7 +248,7 @@ package worlds
 			else 
 			{
 				stress.volume = 0
-				//monster.monsterLight.active = false;
+				monster.monsterLight.active = false;
 			}
 			
 			
@@ -248,13 +263,10 @@ package worlds
 			FP.log(monster.enervement);
 			
 			if (player.collide("ennemy", player.x, player.y)) startLevel();
-			//if (player.collideWith(monster, player.x, player.y)) startLevel();
+			if (player.collideWith(monster, player.x, player.y)) startLevel();
 			if (player.collide("toilets",  player.x, player.y)) endGame();
 			
-			if (ending && !toilets.playing)
-			{
-				FP.world = new creditsWorld();
-			}
+			bringToFront(caca);
 			super.update();
 		
 		}
@@ -291,16 +303,10 @@ package worlds
 			return (Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum);
 		}
 		
-		public function killPlayer():void
-		{
-			if (Input.pressed(Key.R)) startLevel();
-
-		}
 		
 		public function endGame():void
 		{
-			ending = true;
-			toilets.play();
+			FP.world = new creditsWorld();
 		}
 	}
 
