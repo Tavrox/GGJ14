@@ -101,7 +101,7 @@ package worlds
 		{
 			super();
 			
-			textEntity = new Text("Find the toilets", 0, 0);
+			textEntity = new Text("Find the toilets - Mind the spikes - AVOID THE MONSTER", 0, 0);
 			textEntity.color = 0xFFFFFF;
 			textEntity.size = 36;
 			textEntity.font = "My font";
@@ -230,14 +230,14 @@ package worlds
 			{
 				monster.enervement += 0.1;
 				player.mouseLight.active = true;
-				player.speed = 0.10;
+				player.speed = 0.25;
 			}
 			else
 			{	
 				player.mouseLight.active = false;
-				player.speed = 0.25;
+				player.speed = 0.5;
 			}
-			monster.moveTowards(player.x, player.y, 0.35 * monster.palier + int(player.lightOn) * 1.5);
+			monster.moveTowards(player.x, player.y, 0.15 * monster.palier + int(player.lightOn) * 0.75);
 			lightTimer++;
 			
 			if (FP.distance(player.x, player.y, monster.x, monster.y) <= 300) 
@@ -255,7 +255,7 @@ package worlds
 			if (!bruitage.playing && !ending)
 			{
 				timer++;
-				if (timer >= randomRange(620, 1080))
+				if (timer >= randomRange(320, 580))
 				{
 					getSound();
 				}

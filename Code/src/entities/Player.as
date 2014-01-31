@@ -114,7 +114,7 @@ package entities
 			
 			imageMouseLight = new Image(LIGHT);
 			imageMouseLight.originX = this.originX + 1;
-			imageMouseLight.originY = this.originY - 4;
+			imageMouseLight.originY = this.originY - 1;
 			
 			imagePersoLight = new Image(LIGHTPERSO);
 			imagePersoLight.originX = this.originX + 2;
@@ -122,7 +122,7 @@ package entities
 			
 			
 			mouseLight = new Light(this.x, this.y, imageMouseLight, 3, 1);
-			persoLight = new Light(this.x, this.y, imagePersoLight, 2, 1);
+			persoLight = new Light(this.x, this.y, imagePersoLight, 4, 1);
 			
 			gameWorld.lighting.add(persoLight);
 			gameWorld.lighting.add(mouseLight);
